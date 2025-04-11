@@ -42,11 +42,10 @@ DEFAULT_VOICE_ID = "cgSgspJ2msm6clMCkdW9"
 from fastapi import FastAPI
 
 # FastAPI-app maken
-app = FastAPI()
-
-# MCP instantiëren en koppelen aan de FastAPI app
 mcp = FastMCP("ElevenLabs")
-mcp.mount_to(app)
+
+from mcp.server.fastapi import serve_mcp_as_fastapi
+app = serve_mcp_as_fastapi(mcp)
 
 if not api_key:
     raise ValueError("ELEVENLABS_API_KEY environment variable is required")
