@@ -39,6 +39,15 @@ api_key = os.getenv("ELEVENLABS_API_KEY")
 base_path = os.getenv("ELEVENLABS_MCP_BASE_PATH")
 DEFAULT_VOICE_ID = "cgSgspJ2msm6clMCkdW9"
 
+from fastapi import FastAPI
+
+# FastAPI-app maken
+app = FastAPI()
+
+# MCP instantiëren en koppelen aan de FastAPI app
+mcp = FastMCP("ElevenLabs")
+mcp.mount_to(app)
+
 if not api_key:
     raise ValueError("ELEVENLABS_API_KEY environment variable is required")
 
@@ -50,7 +59,6 @@ custom_client = httpx.Client(
 )
 
 client = ElevenLabs(api_key=api_key, httpx_client=custom_client)
-mcp = FastMCP("ElevenLabs")
 
 
 @mcp.tool(
