@@ -39,6 +39,8 @@ api_key = os.getenv("ELEVENLABS_API_KEY")
 base_path = os.getenv("ELEVENLABS_MCP_BASE_PATH")
 DEFAULT_VOICE_ID = "cgSgspJ2msm6clMCkdW9"
 
+mcp = FastMCP("ElevenLabs")
+
 if not api_key:
     raise ValueError("ELEVENLABS_API_KEY environment variable is required")
 
@@ -50,7 +52,6 @@ custom_client = httpx.Client(
 )
 
 client = ElevenLabs(api_key=api_key, httpx_client=custom_client)
-mcp = FastMCP("ElevenLabs")
 
 
 @mcp.tool(
@@ -751,11 +752,7 @@ def play_audio(input_file_path: str) -> TextContent:
     return TextContent(type="text", text=f"Successfully played audio file: {file_path}")
 
 
-def main():
-    print("Starting MCP server")
-    """Run the MCP server"""
-    mcp.run()
+from fastapi import FastAPI
 
-
-if __name__ == "__main__":
-    main()
+app = FastAPI()
+mcp.attach_routes(app)
